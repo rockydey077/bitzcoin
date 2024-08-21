@@ -1,0 +1,40 @@
+.background {
+  background-image: url("../../../public/assets/background/all-bg.jpg");
+  background-position: center center;
+  background-size: cover;
+}
+
+.img_animation {
+  animation: rotate 25s linear infinite;
+}
+
+.btn_animation {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.btn_animation:hover {
+  animation: bounceUp 0.3s forwards;
+  transform: translateY(-15px);
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

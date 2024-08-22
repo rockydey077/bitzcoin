@@ -39,7 +39,7 @@ const ContactPage = () => {
         <div className='bg-[#EEFAFF] -mt-[1px] lg:-mt-0'>
           <div className='py-10 px-5 lg:px-0 grid grid-cols-1 lg:grid-cols-2 max-w-screen-xl mx-auto'>
             {/* Get in touch */}
-            <div className='bg-[#4C4C4C] rounded-t-md lg:rounded-t-none lg:rounded-s-md px-5 lg:px-14 py-12 lg:py-24 text-white space-y-6'>
+            <div className='bg-[#4C4C4C] rounded-t-md lg:rounded-tr-none lg:rounded-s-md px-5 lg:px-14 py-12 lg:py-24 text-white space-y-6'>
               <h3 className='text-4xl font-medium'>Get in touch</h3>
               <p className='text-lg text-slate-200 font-medium'>
                 We are always on the lookout to work with new clients. If you

@@ -10,56 +10,70 @@ import { useEffect, useRef, useState } from "react";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 
-const reviews = [
-  {
-    id: 1,
-    img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
-    name: "Prakash Sharma",
-    text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
-    name: "Prakash Sharma",
-    text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
-    rating: 4.0,
-  },
-  {
-    id: 3,
-    img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
-    name: "Prakash Sharma",
-    text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
-    rating: 4.8,
-  },
-  {
-    id: 4,
-    img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
-    name: "Prakash Sharma",
-    text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
-    rating: 3.9,
-  },
-  {
-    id: 5,
-    img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
-    name: "Prakash Sharma",
-    text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
-    rating: 3.5,
-  },
-  {
-    id: 6,
-    img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
-    name: "Prakash Sharma",
-    text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
-    rating: 3.7,
-  },
-];
+// const reviews = [
+//   {
+//     id: 1,
+//     img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
+//     name: "Prakash Sharma",
+//     text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
+//     rating: 4.5,
+//   },
+//   {
+//     id: 2,
+//     img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
+//     name: "Prakash Sharma",
+//     text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
+//     rating: 4.0,
+//   },
+//   {
+//     id: 3,
+//     img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
+//     name: "Prakash Sharma",
+//     text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
+//     rating: 4.8,
+//   },
+//   {
+//     id: 4,
+//     img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
+//     name: "Prakash Sharma",
+//     text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
+//     rating: 3.9,
+//   },
+//   {
+//     id: 5,
+//     img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
+//     name: "Prakash Sharma",
+//     text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
+//     rating: 3.5,
+//   },
+//   {
+//     id: 6,
+//     img: "https://i.ibb.co/hCsWc0x/teacher2.jpg",
+//     name: "Prakash Sharma",
+//     text: "Best for payment and vouchers requirements and everything is fine in this no risk payments related queries best service ever.",
+//     rating: 3.7,
+//   },
+// ];
 
 const Review = () => {
   const swiperRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [open, setOpen] = useState(false);
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        "https://paymentsitebackend.onrender.com/api/review"
+      );
+      const data = await res.json();
+      setReviews(data);
+      console.log(data);
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,6 +94,33 @@ const Review = () => {
 
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
+
+  const handleReview = (event) => {
+    event.preventDefault();
+    const form = event.target;
+
+    const email = form.email.value;
+    const review = form.review.value;
+    const rating = form.rating.value;
+    const visibility = form.visibility.value;
+
+    const reviewDetails = {
+      email,
+      review,
+      rating,
+      visibility,
+    };
+
+    fetch("https://paymentsitebackend.onrender.com/api/review", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(reviewDetails),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
 
   return (
     <div className='max-w-screen-xl mx-auto py-24 px-5 lg:px-0'>
@@ -122,10 +163,10 @@ const Review = () => {
             }}
             className='mySwiper'>
             {reviews.map((review) => (
-              <SwiperSlide key={review.id} className='px-1 py-5'>
+              <SwiperSlide key={review._id} className='px-1 py-5'>
                 <div
                   className={`space-y-3 ${styles.review_shadow} w-fit text-center p-5`}>
-                  <div className='mx-auto'>
+                  {/* <div className='mx-auto'>
                     <Image
                       className='w-16 inline-block h-16 rounded-full'
                       src={review.img}
@@ -133,10 +174,10 @@ const Review = () => {
                       height={200}
                       alt=''
                     />
-                  </div>
+                  </div> */}
                   <div className='space-y-2'>
                     <h3 className='text-lg text-slate-700 font-semibold'>
-                      {review.name}
+                      {review.email}
                     </h3>
                     <div className='flex justify-center'>
                       <ReactStars
@@ -149,7 +190,7 @@ const Review = () => {
                       />
                     </div>
                     <p className='text-sm font-normal text-slate-700'>
-                      {review.text}
+                      {review.review}
                     </p>
                   </div>
                 </div>
@@ -169,7 +210,7 @@ const Review = () => {
       {/* Modal */}
       <Modal open={open} onClose={onCloseModal} center>
         <div className='p-10'>
-          <form action='' className='w-full space-y-10'>
+          <form onSubmit={handleReview} action='' className='w-full space-y-10'>
             <div className='relative' data-twe-input-wrapper-init>
               <input
                 type='email'
@@ -187,7 +228,7 @@ const Review = () => {
             <div className='relative' data-twe-input-wrapper-init>
               <input
                 type='number'
-                name='number'
+                name='rating'
                 id='number'
                 className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
                 placeholder='Rating'
@@ -213,7 +254,7 @@ const Review = () => {
             <div className='relative' data-twe-input-wrapper-init>
               <textarea
                 type='text'
-                name='message'
+                name='review'
                 id='message'
                 className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
                 placeholder='Review'

@@ -15,7 +15,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang='en'>
-      <body className={`${roboto.className} max-w-screen-2xl mx-auto`}>
+      <body
+        suppressHydrationWarning={true}
+        className={`${roboto.className} max-w-screen-2xl mx-auto`}>
         <section>{children}</section>
         <Footer />
       </body>

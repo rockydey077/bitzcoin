@@ -3,10 +3,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import Image from "next/image";
-import Rating from "react-rating";
+import ReactStars from "react-rating-stars-component";
 import styles from "./Review.module.css";
-import { FaAngleLeft, FaAngleRight, FaStar } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
+import "react-responsive-modal/styles.css";
+import { Modal } from "react-responsive-modal";
 
 const reviews = [
   {
@@ -57,6 +59,7 @@ const Review = () => {
   const swiperRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -74,6 +77,9 @@ const Review = () => {
   const handlePrev = () => {
     swiperRef.current.swiper.slidePrev();
   };
+
+  const onOpenModal = () => setOpen(true);
+  const onCloseModal = () => setOpen(false);
 
   return (
     <div className='max-w-screen-xl mx-auto py-24 px-5 lg:px-0'>
@@ -132,6 +138,16 @@ const Review = () => {
                     <h3 className='text-lg text-slate-700 font-semibold'>
                       {review.name}
                     </h3>
+                    <div className='flex justify-center'>
+                      <ReactStars
+                        count={5}
+                        value={review.rating}
+                        size={24}
+                        edit={false}
+                        activeColor='#ffd700'
+                        isHalf={true}
+                      />
+                    </div>
                     <p className='text-sm font-normal text-slate-700'>
                       {review.text}
                     </p>
@@ -142,11 +158,82 @@ const Review = () => {
           </Swiper>
         </div>
         <div className='text-center'>
-          <button className='bg-gradient-to-t from-[#F2AB04] to-[#E49A01] px-4 py-2 rounded text-white font-semibold'>
+          <button
+            onClick={onOpenModal}
+            className='bg-gradient-to-t from-[#F2AB04] to-[#E49A01] px-4 py-2 rounded text-white font-semibold'>
             Add Review
           </button>
         </div>
       </div>
+
+      {/* Modal */}
+      <Modal open={open} onClose={onCloseModal} center>
+        <div className='p-10'>
+          <form action='' className='w-full space-y-10'>
+            <div className='relative' data-twe-input-wrapper-init>
+              <input
+                type='email'
+                name='email'
+                id='email'
+                className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                placeholder='Email'
+              />
+              <label
+                htmlFor='email'
+                className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                Email
+              </label>
+            </div>
+            <div className='relative' data-twe-input-wrapper-init>
+              <input
+                type='number'
+                name='number'
+                id='number'
+                className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                placeholder='Rating'
+              />
+              <label
+                htmlFor='number'
+                className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                Rating
+              </label>
+            </div>
+            <div>
+              <select
+                className='w-full border py-3 px-2 outline-none text-slate-500  border-slate-300 rounded'
+                name='visibility'
+                id='visibility'>
+                <option defaultChecked disabled>
+                  Visibility
+                </option>
+                <option value='true'>True</option>
+                <option value='false'>False</option>
+              </select>
+            </div>
+            <div className='relative' data-twe-input-wrapper-init>
+              <textarea
+                type='text'
+                name='message'
+                id='message'
+                className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                placeholder='Review'
+              />
+              <label
+                htmlFor='message'
+                className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                Review
+              </label>
+            </div>
+            <div>
+              <input
+                type='submit'
+                value='Add Review'
+                className='bg-[#F2AB04] w-full py-3 rounded-md text-white font-medium text-base cursor-pointer'
+              />
+            </div>
+          </form>
+        </div>
+      </Modal>
     </div>
   );
 };

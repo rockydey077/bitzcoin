@@ -9,7 +9,7 @@ import aboutImg from "../../../public/assets/about-dec-v3.png";
 
 const About = () => {
   return (
-    <div className='pb-24'>
+    <div id='about' className='pb-24'>
       <div className='relative'>
         <svg
           className='rotate-180 fill-white -mt-9 lg:-mt-36'

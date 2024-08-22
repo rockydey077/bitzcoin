@@ -1,0 +1,14 @@
+.connect_bg {
+  background-image: url("../../../public/assets/bg-img2.png");
+  background-position: -125px 50%;
+  background-repeat: no-repeat;
+}
+
+.container_shadow {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+.img_shadow {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}

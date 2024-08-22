@@ -9,6 +9,13 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
+import {
+  useAddReviewMutation,
+  useGetReviewsQuery,
+} from "@/lib/redux/features/api/apiSlice";
+import HashLoader from "react-spinners/HashLoader";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
 // const reviews = [
 //   {
@@ -60,20 +67,13 @@ const Review = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [open, setOpen] = useState(false);
-  const [reviews, setReviews] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch(
-        "https://paymentsitebackend.onrender.com/api/review"
-      );
-      const data = await res.json();
-      setReviews(data);
-      console.log(data);
-    };
-
-    fetchData();
-  }, []);
+  const { data: reviews, isLoading } = useGetReviewsQuery();
+  const [addReview, { isLoading: addLoading, isSuccess, isError, error }] =
+    useAddReviewMutation();
+  const dispatch = useDispatch();
+  const [reviewValue, setReviewValue] = useState(false);
+  const [emailValue, setEmailValue] = useState(false);
+  const [ratingValue, setRatingValue] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -83,6 +83,32 @@ const Review = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    if (addLoading) {
+      toast.loading("Adding...", { id: "addReview" });
+    }
+
+    if (!addLoading && isSuccess) {
+      toast.success("Review added", { id: "addReview" });
+    }
+
+    if (!addLoading && isError) {
+      toast.error(error, { id: "addReview" });
+    }
+  }, [addLoading, isError, error, isSuccess]);
+
+  const handleReviewValue = (e) => {
+    setReviewValue(e.target.value !== "");
+  };
+
+  const handleEmail = (e) => {
+    setEmailValue(e.target.value !== "");
+  };
+
+  const handleRating = (e) => {
+    setRatingValue(e.target.value !== "");
+  };
 
   const handleNext = () => {
     swiperRef.current.swiper.slideNext();
@@ -96,6 +122,7 @@ const Review = () => {
   const onCloseModal = () => setOpen(false);
 
   const handleReview = (event) => {
+    setOpen(false);
     event.preventDefault();
     const form = event.target;
 
@@ -111,16 +138,16 @@ const Review = () => {
       visibility,
     };
 
-    fetch("https://paymentsitebackend.onrender.com/api/review", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(reviewDetails),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data));
+    dispatch(addReview(reviewDetails));
   };
+
+  if (isLoading) {
+    return (
+      <div className='text-center text-yellow-500'>
+        <HashLoader />
+      </div>
+    );
+  }
 
   return (
     <div className='max-w-screen-xl mx-auto py-24 px-5 lg:px-0'>
@@ -139,7 +166,7 @@ const Review = () => {
             disabled={
               isMobile
                 ? activeIndex === reviews.length - 1
-                : activeIndex === reviews.length / 2
+                : activeIndex === reviews.length - 3
             }
             onClick={handleNext}
             className='p-3 bg-[#fff] text-slate-700 shadow-md rounded-xl disabled:bg-[#EBEBE4] disabled:text-slate-400 disabled:cursor-default'>
@@ -216,12 +243,19 @@ const Review = () => {
                 type='email'
                 name='email'
                 id='email'
-                className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                onInput={handleEmail}
+                className={`${
+                  emailValue ? "data-[has-value=true]" : ""
+                } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
                 placeholder='Email'
               />
               <label
                 htmlFor='email'
-                className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                className={`${
+                  emailValue
+                    ? "-translate-y-[1.15rem] scale-[0.8] text-primary px-2 bg-white w-fit"
+                    : ""
+                } pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                 Email
               </label>
             </div>
@@ -230,12 +264,19 @@ const Review = () => {
                 type='number'
                 name='rating'
                 id='number'
-                className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                onInput={handleRating}
+                className={`${
+                  ratingValue ? "data-[has-value=true]" : ""
+                } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
                 placeholder='Rating'
               />
               <label
                 htmlFor='number'
-                className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                className={`${
+                  ratingValue
+                    ? "-translate-y-[1.15rem] scale-[0.8] text-primary px-2 bg-white w-fit"
+                    : ""
+                } pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                 Rating
               </label>
             </div>
@@ -243,6 +284,7 @@ const Review = () => {
               <select
                 className='w-full border py-3 px-2 outline-none text-slate-500  border-slate-300 rounded'
                 name='visibility'
+                defaultValue='Visibility'
                 id='visibility'>
                 <option defaultChecked disabled>
                   Visibility
@@ -256,12 +298,19 @@ const Review = () => {
                 type='text'
                 name='review'
                 id='message'
-                className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                onInput={handleReviewValue}
+                className={`${
+                  reviewValue ? "data-[has-value=true]" : ""
+                } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
                 placeholder='Review'
               />
               <label
                 htmlFor='message'
-                className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                className={`${
+                  reviewValue
+                    ? "-translate-y-[1.15rem] scale-[0.8] text-primary px-2 bg-white w-fit"
+                    : ""
+                } pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                 Review
               </label>
             </div>

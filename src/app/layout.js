@@ -1,6 +1,8 @@
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Shared/Footer";
+import StoreProvider from "./StoreProvider";
+import { Toaster } from "react-hot-toast";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -18,8 +20,11 @@ export default function RootLayout({ children }) {
       <body
         suppressHydrationWarning={true}
         className={`${roboto.className} max-w-screen-2xl mx-auto`}>
-        <section>{children}</section>
+        <section>
+          <StoreProvider>{children}</StoreProvider>
+        </section>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );

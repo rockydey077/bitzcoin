@@ -1,8 +1,35 @@
 "use client";
 import Navbar from "@/components/Shared/Navbar";
 import styles from "./contact.module.css";
+import { useState } from "react";
 
 const ContactPage = () => {
+  const [nameValue, setNameValue] = useState(false);
+  const [emailValue, setEmailValue] = useState(false);
+  const [numberValue, setNumberValue] = useState(false);
+  const [subjectValue, setSubjectValue] = useState(false);
+  const [messageValue, setMessageValue] = useState(false);
+
+  const handleName = (e) => {
+    setNameValue(e.target.value !== "");
+  };
+
+  const handleEmail = (e) => {
+    setEmailValue(e.target.value !== "");
+  };
+
+  const handleNumber = (e) => {
+    setNumberValue(e.target.value !== "");
+  };
+
+  const handleSubject = (e) => {
+    setSubjectValue(e.target.value !== "");
+  };
+
+  const handleMessage = (e) => {
+    setMessageValue(e.target.value !== "");
+  };
+
   return (
     <div>
       <div className={`${styles.background} pb-48`}>
@@ -124,12 +151,19 @@ const ContactPage = () => {
                     type='text'
                     name='name'
                     id='name'
-                    className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                    className={`${
+                      nameValue ? "data-[has-value=true]" : ""
+                    } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
                     placeholder='Full Name'
+                    onInput={handleName}
                   />
                   <label
                     htmlFor='name'
-                    className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                    className={`${
+                      nameValue
+                        ? "-translate-y-[1.15rem] scale-[0.8] text-primary px-2 bg-white w-fit"
+                        : ""
+                    }} pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                     Full Name
                   </label>
                 </div>
@@ -139,12 +173,19 @@ const ContactPage = () => {
                       type='email'
                       name='email'
                       id='email'
-                      className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                      onInput={handleEmail}
+                      className={`${
+                        emailValue ? "data-[has-value=true]" : ""
+                      } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
                       placeholder='Email'
                     />
                     <label
                       htmlFor='email'
-                      className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                      className={`${
+                        emailValue
+                          ? "-translate-y-[1.15rem] scale-[0.8] text-primary px-2 bg-white w-fit"
+                          : ""
+                      } pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                       Email
                     </label>
                   </div>
@@ -152,13 +193,20 @@ const ContactPage = () => {
                     <input
                       type='number'
                       name='number'
+                      onInput={handleNumber}
                       id='number'
-                      className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                      className={`${
+                        numberValue ? "data-[has-value=true]" : ""
+                      } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
                       placeholder='Phone Number'
                     />
                     <label
                       htmlFor='number'
-                      className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                      className={`${
+                        numberValue
+                          ? "-translate-y-[1.15rem] scale-[0.8] text-primary px-2 bg-white w-fit"
+                          : ""
+                      }} pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                       Phone Number
                     </label>
                   </div>
@@ -168,12 +216,19 @@ const ContactPage = () => {
                     type='text'
                     name='subject'
                     id='subject'
-                    className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                    onInput={handleSubject}
+                    className={`${
+                      subjectValue ? "data-[has-value=true]" : ""
+                    } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
                     placeholder='Subject'
                   />
                   <label
                     htmlFor='subject'
-                    className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                    className={`${
+                      subjectValue
+                        ? "-translate-y-[1.15rem] scale-[0.8] text-primary px-2 bg-white w-fit"
+                        : ""
+                    }} pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                     Subject
                   </label>
                 </div>
@@ -182,12 +237,19 @@ const ContactPage = () => {
                     type='text'
                     name='message'
                     id='message'
-                    className='peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0'
+                    onInput={handleMessage}
+                    className={`${
+                      messageValue ? "data-[has-value=true]" : ""
+                    } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
                     placeholder='Message'
                   />
                   <label
                     htmlFor='message'
-                    className='pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2'>
+                    className={`${
+                      messageValue
+                        ? "-translate-y-[1.15rem] scale-[0.8] text-primary px-2 bg-white w-fit"
+                        : ""
+                    }} pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                     Message
                   </label>
                 </div>

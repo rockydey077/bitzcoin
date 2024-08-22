@@ -14,7 +14,7 @@ const Newsletter = () => {
         </p>
         <div className=''>
           <input
-            className='px-5 py-[18px] rounded-s-full lg:w-[85%]'
+            className='px-5 outline-none py-[18px] rounded-s-full lg:w-[85%]'
             type='text'
             name=''
             placeholder='Enter your email address'

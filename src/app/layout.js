@@ -1,5 +1,6 @@
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import Footer from "@/components/Shared/Footer";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
     <html lang='en'>
       <body className={`${roboto.className} max-w-screen-2xl mx-auto`}>
         <section>{children}</section>
+        <Footer />
       </body>
     </html>
   );

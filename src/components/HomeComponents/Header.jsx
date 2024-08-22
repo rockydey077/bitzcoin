@@ -12,7 +12,7 @@ import { IoLogoInstagram } from "react-icons/io";
 
 const Header = () => {
   return (
-    <div className={`${styles.background} pb-96`}>
+    <div className={`${styles.background} pb-40 lg:pb-96`}>
       <div className='pt-8 pb-[182px]'>
         <Navbar />
       </div>

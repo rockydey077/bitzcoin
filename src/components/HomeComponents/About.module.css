@@ -1,0 +1,9 @@
+.coins_shadow {
+  box-shadow: 5px 0px 33px 0px rgba(201, 219.99999999999997, 255, 0.44);
+}
+
+.about_bg {
+  background-image: url("../../../public/assets/bg-img.png");
+  background-position: 110% 50%;
+  background-repeat: no-repeat;
+}

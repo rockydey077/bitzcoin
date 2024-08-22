@@ -2,7 +2,7 @@
 import Navbar from "@/components/Shared/Navbar";
 import styles from "./contact.module.css";
 
-const page = () => {
+const ContactPage = () => {
   return (
     <div>
       <div className={`${styles.background} pb-48`}>
@@ -211,4 +211,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ContactPage;

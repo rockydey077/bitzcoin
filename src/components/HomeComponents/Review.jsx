@@ -5,6 +5,7 @@ import "swiper/css/navigation";
 import Image from "next/image";
 import ReactStars from "react-rating-stars-component";
 import styles from "./Review.module.css";
+import "./Review.css";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
 import "react-responsive-modal/styles.css";
@@ -77,6 +78,7 @@ const Review = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   useEffect(() => {
@@ -142,6 +144,7 @@ const Review = () => {
     try {
       setOpen(false);
       await addReview(reviewInfo).unwrap();
+      reset();
     } catch (err) {
       toast.error(err);
     }
@@ -315,7 +318,7 @@ const Review = () => {
                 <span className='text-xs text-red-500'>Review is required</span>
               )}
             </div>
-            <div>
+            <div className='text-right'>
               <input
                 type='submit'
                 value='Add Review'

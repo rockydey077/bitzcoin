@@ -4,6 +4,7 @@ import styles from "./contact.module.css";
 import { useEffect, useState } from "react";
 import { useAddContactMutation } from "@/lib/redux/features/api/contactApi";
 import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
 
 const ContactPage = () => {
   const [nameValue, setNameValue] = useState(false);
@@ -11,6 +12,12 @@ const ContactPage = () => {
   const [numberValue, setNumberValue] = useState(false);
   const [subjectValue, setSubjectValue] = useState(false);
   const [messageValue, setMessageValue] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
   const [createContact, { isLoading, isSuccess, isError, error }] =
     useAddContactMutation();
@@ -49,15 +56,12 @@ const ContactPage = () => {
     setMessageValue(e.target.value !== "");
   };
 
-  const handleContactForm = async (event) => {
-    event.preventDefault();
-    const form = event.target;
-
-    const name = form.name.value;
-    const email = form.email.value;
-    const number = form.number.value;
-    const subject = form.subject.value;
-    const message = form.message.value;
+  const handleContactForm = async (data) => {
+    const name = data.name;
+    const email = data.email;
+    const number = data.number;
+    const subject = data.subject;
+    const message = data.message;
 
     const contactInfo = {
       fullName: name,
@@ -73,7 +77,7 @@ const ContactPage = () => {
       toast.error(error);
     }
 
-    form.reset();
+    reset();
   };
 
   return (
@@ -192,7 +196,7 @@ const ContactPage = () => {
             {/* Form */}
             <div className='border-2 border-[#4C4C4C] rounded-b-md lg:rounded-b-none lg:rounded-e-md bg-white flex items-center py-12 lg:py-0'>
               <form
-                onSubmit={handleContactForm}
+                onSubmit={handleSubmit(handleContactForm)}
                 action=''
                 className='px-5 lg:px-[60px] w-full space-y-10'>
                 <div className='relative' data-twe-input-wrapper-init>
@@ -200,6 +204,7 @@ const ContactPage = () => {
                     type='text'
                     name='name'
                     id='name'
+                    {...register("name", { required: true })}
                     className={`${
                       nameValue ? "data-[has-value=true]" : ""
                     } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
@@ -215,6 +220,11 @@ const ContactPage = () => {
                     }} pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                     Full Name
                   </label>
+                  {errors.name && (
+                    <span className='text-xs text-red-500'>
+                      Name is required
+                    </span>
+                  )}
                 </div>
                 <div className='grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-6'>
                   <div className='relative' data-twe-input-wrapper-init>
@@ -222,6 +232,7 @@ const ContactPage = () => {
                       type='email'
                       name='email'
                       id='email'
+                      {...register("email", { required: true })}
                       onInput={handleEmail}
                       className={`${
                         emailValue ? "data-[has-value=true]" : ""
@@ -237,11 +248,17 @@ const ContactPage = () => {
                       } pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                       Email
                     </label>
+                    {errors.email && (
+                      <span className='text-xs text-red-500'>
+                        Email is required
+                      </span>
+                    )}
                   </div>
                   <div className='relative' data-twe-input-wrapper-init>
                     <input
                       type='number'
                       name='number'
+                      {...register("number", { required: true })}
                       onInput={handleNumber}
                       id='number'
                       className={`${
@@ -258,6 +275,11 @@ const ContactPage = () => {
                       }} pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                       Phone Number
                     </label>
+                    {errors.number && (
+                      <span className='text-xs text-red-500'>
+                        Number is required
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className='relative' data-twe-input-wrapper-init>
@@ -265,6 +287,7 @@ const ContactPage = () => {
                     type='text'
                     name='subject'
                     id='subject'
+                    {...register("subject", { required: true })}
                     onInput={handleSubject}
                     className={`${
                       subjectValue ? "data-[has-value=true]" : ""
@@ -280,11 +303,17 @@ const ContactPage = () => {
                     }} pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                     Subject
                   </label>
+                  {errors.subject && (
+                    <span className='text-xs text-red-500'>
+                      Subject is required
+                    </span>
+                  )}
                 </div>
                 <div className='relative' data-twe-input-wrapper-init>
                   <textarea
                     type='text'
                     name='message'
+                    {...register("message", { required: true })}
                     id='message'
                     onInput={handleMessage}
                     className={`${
@@ -301,6 +330,11 @@ const ContactPage = () => {
                     }} pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                     Message
                   </label>
+                  {errors.message && (
+                    <span className='text-xs text-red-500'>
+                      Message is required
+                    </span>
+                  )}
                 </div>
                 <div>
                   <input

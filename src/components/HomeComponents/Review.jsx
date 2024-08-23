@@ -15,6 +15,7 @@ import {
 } from "@/lib/redux/features/api/apiSlice";
 import HashLoader from "react-spinners/HashLoader";
 import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
 
 // const reviews = [
 //   {
@@ -72,6 +73,11 @@ const Review = () => {
   const [reviewValue, setReviewValue] = useState(false);
   const [emailValue, setEmailValue] = useState(false);
   const [ratingValue, setRatingValue] = useState(0);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     const handleResize = () => {
@@ -115,13 +121,9 @@ const Review = () => {
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
 
-  const handleReview = async (event) => {
-    setOpen(false);
-    event.preventDefault();
-    const form = event.target;
-
-    const email = form.email.value;
-    const review = form.review.value;
+  const handleReview = async (data) => {
+    const email = data.email;
+    const review = data.review;
     const rating = ratingValue;
     const visibility = false;
 
@@ -138,6 +140,7 @@ const Review = () => {
     };
 
     try {
+      setOpen(false);
       await addReview(reviewInfo).unwrap();
     } catch (err) {
       toast.error(err);
@@ -240,12 +243,16 @@ const Review = () => {
       {/* Modal */}
       <Modal open={open} onClose={onCloseModal} center>
         <div className='p-5'>
-          <form onSubmit={handleReview} action='' className='w-full space-y-5'>
+          <form
+            onSubmit={handleSubmit(handleReview)}
+            action=''
+            className='w-full space-y-5'>
             <div className='relative' data-twe-input-wrapper-init>
               <input
                 type='email'
                 name='email'
                 id='email'
+                {...register("email", { required: true })}
                 onInput={handleEmail}
                 className={`${
                   emailValue ? "data-[has-value=true]" : ""
@@ -261,6 +268,9 @@ const Review = () => {
                 } pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                 Email
               </label>
+              {errors.email && (
+                <span className='text-xs text-red-500'>Email is required</span>
+              )}
             </div>
             <div>
               <label
@@ -270,17 +280,22 @@ const Review = () => {
               </label>
               <ReactStars
                 id='rating'
+                // {...register("rating", { required: true })}
                 count={5}
                 onChange={(newRating) => setRatingValue(newRating)}
                 size={24}
                 activeColor='#ffd700'
               />
+              {/* {errors.email && (
+                <span className='text-xs text-red-500'>Rating is required</span>
+              )} */}
             </div>
             <div className='relative' data-twe-input-wrapper-init>
               <textarea
                 type='text'
                 name='review'
                 id='message'
+                {...register("review", { required: true })}
                 onInput={handleReviewValue}
                 className={`${
                   reviewValue ? "data-[has-value=true]" : ""
@@ -296,6 +311,9 @@ const Review = () => {
                 } pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
                 Review
               </label>
+              {errors.review && (
+                <span className='text-xs text-red-500'>Review is required</span>
+              )}
             </div>
             <div>
               <input

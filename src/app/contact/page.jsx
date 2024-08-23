@@ -1,7 +1,9 @@
 "use client";
 import Navbar from "@/components/Shared/Navbar";
 import styles from "./contact.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAddContactMutation } from "@/lib/redux/features/api/contactApi";
+import toast from "react-hot-toast";
 
 const ContactPage = () => {
   const [nameValue, setNameValue] = useState(false);
@@ -9,6 +11,23 @@ const ContactPage = () => {
   const [numberValue, setNumberValue] = useState(false);
   const [subjectValue, setSubjectValue] = useState(false);
   const [messageValue, setMessageValue] = useState(false);
+
+  const [createContact, { isLoading, isSuccess, isError, error }] =
+    useAddContactMutation();
+
+  useEffect(() => {
+    if (isLoading) {
+      toast.loading("Adding...", { id: "addContact" });
+    }
+
+    if (!isLoading && isSuccess) {
+      toast.success("Contact added", { id: "addContact" });
+    }
+
+    if (!isLoading && isError) {
+      toast.error(error, { id: "addContact" });
+    }
+  }, [isLoading, isError, error, isSuccess]);
 
   const handleName = (e) => {
     setNameValue(e.target.value !== "");
@@ -28,6 +47,33 @@ const ContactPage = () => {
 
   const handleMessage = (e) => {
     setMessageValue(e.target.value !== "");
+  };
+
+  const handleContactForm = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+
+    const name = form.name.value;
+    const email = form.email.value;
+    const number = form.number.value;
+    const subject = form.subject.value;
+    const message = form.message.value;
+
+    const contactInfo = {
+      fullName: name,
+      email,
+      phone: number,
+      subject,
+      message,
+    };
+
+    try {
+      await createContact(contactInfo).unwrap();
+    } catch (error) {
+      toast.error(error);
+    }
+
+    form.reset();
   };
 
   return (
@@ -145,7 +191,10 @@ const ContactPage = () => {
             </div>
             {/* Form */}
             <div className='border-2 border-[#4C4C4C] rounded-b-md lg:rounded-b-none lg:rounded-e-md bg-white flex items-center py-12 lg:py-0'>
-              <form action='' className='px-5 lg:px-[60px] w-full space-y-10'>
+              <form
+                onSubmit={handleContactForm}
+                action=''
+                className='px-5 lg:px-[60px] w-full space-y-10'>
                 <div className='relative' data-twe-input-wrapper-init>
                   <input
                     type='text'

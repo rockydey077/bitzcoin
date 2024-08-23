@@ -14,7 +14,6 @@ import {
   useGetReviewsQuery,
 } from "@/lib/redux/features/api/apiSlice";
 import HashLoader from "react-spinners/HashLoader";
-import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 
 // const reviews = [
@@ -70,7 +69,6 @@ const Review = () => {
   const { data: reviews, isLoading } = useGetReviewsQuery();
   const [addReview, { isLoading: addLoading, isSuccess, isError, error }] =
     useAddReviewMutation();
-  const dispatch = useDispatch();
   const [reviewValue, setReviewValue] = useState(false);
   const [emailValue, setEmailValue] = useState(false);
   const [ratingValue, setRatingValue] = useState(false);
@@ -121,7 +119,7 @@ const Review = () => {
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
 
-  const handleReview = (event) => {
+  const handleReview = async (event) => {
     setOpen(false);
     event.preventDefault();
     const form = event.target;
@@ -138,7 +136,11 @@ const Review = () => {
       visibility,
     };
 
-    dispatch(addReview(reviewDetails));
+    try {
+      await addReview(reviewDetails).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (isLoading) {

@@ -139,7 +139,7 @@ const Review = () => {
     try {
       await addReview(reviewInfo).unwrap();
     } catch (error) {
-      console.error(error);
+      toast.error(error);
     }
   };
 

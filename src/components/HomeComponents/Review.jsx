@@ -71,7 +71,7 @@ const Review = () => {
     useAddReviewMutation();
   const [reviewValue, setReviewValue] = useState(false);
   const [emailValue, setEmailValue] = useState(false);
-  const [ratingValue, setRatingValue] = useState(false);
+  const [ratingValue, setRatingValue] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
@@ -104,10 +104,6 @@ const Review = () => {
     setEmailValue(e.target.value !== "");
   };
 
-  const handleRating = (e) => {
-    setRatingValue(e.target.value !== "");
-  };
-
   const handleNext = () => {
     swiperRef.current.swiper.slideNext();
   };
@@ -126,8 +122,13 @@ const Review = () => {
 
     const email = form.email.value;
     const review = form.review.value;
-    const rating = form.rating.value;
-    const visibility = form.visibility.value;
+    const rating = ratingValue;
+    const visibility = false;
+
+    if (rating > 5) {
+      toast.error("Maximum rating value is 5!");
+      return;
+    }
 
     const reviewInfo = {
       email,
@@ -138,8 +139,8 @@ const Review = () => {
 
     try {
       await addReview(reviewInfo).unwrap();
-    } catch (error) {
-      toast.error(error);
+    } catch (err) {
+      toast.error(err);
     }
   };
 
@@ -238,8 +239,8 @@ const Review = () => {
 
       {/* Modal */}
       <Modal open={open} onClose={onCloseModal} center>
-        <div className='p-10'>
-          <form onSubmit={handleReview} action='' className='w-full space-y-10'>
+        <div className='p-5'>
+          <form onSubmit={handleReview} action='' className='w-full space-y-5'>
             <div className='relative' data-twe-input-wrapper-init>
               <input
                 type='email'
@@ -261,38 +262,19 @@ const Review = () => {
                 Email
               </label>
             </div>
-            <div className='relative' data-twe-input-wrapper-init>
-              <input
-                type='number'
-                name='rating'
-                id='number'
-                onInput={handleRating}
-                className={`${
-                  ratingValue ? "data-[has-value=true]" : ""
-                } peer block min-h-[auto] w-full rounded border border-slate-300 bg-transparent px-5 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:slate-700 dark:placeholder:text-slate-700 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0`}
-                placeholder='Rating'
-              />
-              <label
-                htmlFor='number'
-                className={`${
-                  ratingValue
-                    ? "-translate-y-[1.15rem] scale-[0.8] text-primary px-2 bg-white w-fit"
-                    : ""
-                } pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-slate-700 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[1.15rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-slate-500 dark:peer-focus:text-primary peer-focus:bg-white peer-focus:w-fit peer-focus:px-2`}>
-                Rating
-              </label>
-            </div>
             <div>
-              <select
-                className='w-full border py-3 px-2 outline-none text-slate-500  border-slate-300 rounded'
-                name='visibility'
-                defaultValue='false'
-                id='visibility'>
-                <option value='true'>True</option>
-                <option value='false' defaultChecked>
-                  False
-                </option>
-              </select>
+              <label
+                htmlFor='rating'
+                className='text-sm font-medium text-slate-700'>
+                Your Rating
+              </label>
+              <ReactStars
+                id='rating'
+                count={5}
+                onChange={(newRating) => setRatingValue(newRating)}
+                size={24}
+                activeColor='#ffd700'
+              />
             </div>
             <div className='relative' data-twe-input-wrapper-init>
               <textarea
@@ -319,7 +301,7 @@ const Review = () => {
               <input
                 type='submit'
                 value='Add Review'
-                className='bg-[#F2AB04] w-full py-3 rounded-md text-white font-medium text-base cursor-pointer'
+                className='bg-[#F2AB04] w-fit px-5 py-3 rounded-md text-white font-medium text-base cursor-pointer'
               />
             </div>
           </form>

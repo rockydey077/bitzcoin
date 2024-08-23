@@ -129,7 +129,7 @@ const Review = () => {
     const rating = form.rating.value;
     const visibility = form.visibility.value;
 
-    const reviewDetails = {
+    const reviewInfo = {
       email,
       review,
       rating,
@@ -137,7 +137,7 @@ const Review = () => {
     };
 
     try {
-      await addReview(reviewDetails).unwrap();
+      await addReview(reviewInfo).unwrap();
     } catch (error) {
       console.error(error);
     }
@@ -286,13 +286,12 @@ const Review = () => {
               <select
                 className='w-full border py-3 px-2 outline-none text-slate-500  border-slate-300 rounded'
                 name='visibility'
-                defaultValue='Visibility'
+                defaultValue='false'
                 id='visibility'>
-                <option defaultChecked disabled>
-                  Visibility
-                </option>
                 <option value='true'>True</option>
-                <option value='false'>False</option>
+                <option value='false' defaultChecked>
+                  False
+                </option>
               </select>
             </div>
             <div className='relative' data-twe-input-wrapper-init>

@@ -100,9 +100,8 @@ const Review = () => {
     }
 
     if (!addLoading && isError) {
-      toast.error(error, { id: "addReview" });
     }
-  }, [addLoading, isError, error, isSuccess]);
+  }, [addLoading, isError, isSuccess]);
 
   const handleReviewValue = (e) => {
     setReviewValue(e.target.value !== "");

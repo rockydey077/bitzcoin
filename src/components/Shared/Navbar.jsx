@@ -13,7 +13,6 @@ const Navbar = () => {
   const pathName = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
-  console.log(isOpen);
 
   const toggleSidebar = (event) => {
     event.stopPropagation();
@@ -81,9 +80,7 @@ const Navbar = () => {
         <div
           ref={sidebarRef}
           onClick={(event) => event.stopPropagation()}
-          className={`${
-            styles.hamburger_transition
-          } fixed top-0 left-0 transition-transform duration-500 h-full w-[325px] bg-white z-50 ${
+          className={`fixed top-0 left-0 transform transition-transform duration-500 h-full w-[325px] bg-white z-50 ease-in-out ${
             isOpen ? "translate-x-0" : "-translate-x-full"
           }`}>
           <div className='flex justify-between items-center px-3 py-5 '>
